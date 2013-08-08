@@ -28,7 +28,7 @@ def get_pipeline():
                                                 random_state=1))]
     return Pipeline(steps)
 
-def main():
+if __name__=="__main__":
     print("Reading in the training data")
     train = data_io.read_train_pairs()
     target = data_io.read_train_target()
@@ -39,6 +39,4 @@ def main():
 
     print("Saving the classifier")
     data_io.save_model(classifier)
-    
-if __name__=="__main__":
-    main()
+  
