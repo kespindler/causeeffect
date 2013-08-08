@@ -41,7 +41,10 @@ def identity(x):
     return x
 
 def count_unique(x):
-    return len(set(x))
+    return len(np.unique(x))
+
+def percentage_unique(x):
+    return 1.0 * count_unique(x)/len(x)
 
 def normalized_entropy(x):
     x = (x - np.mean(x)) / np.std(x)
