@@ -5,6 +5,7 @@ import pickle
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline
+import pandas as pd
 
 def feature_extractor():
     features = [('Number of Samples', 'A', f.SimpleTransform(transformer=len)),
@@ -32,10 +33,19 @@ if __name__=="__main__":
     print("Reading in the training data")
     train = data_io.read_train_pairs()
     target = data_io.read_train_target()
+    info = data_io.read_train_info()
+
+    train_info = train.join(info)
+
+    #max_categoriesA = max(len(np.unique(x)) for x in 
+    #    train['A'][info['A type'] == 'Categorical'])
+    #max_categoriesB = max(len(np.unique(x)) for x in 
+    #    train['B'][info['B type'] == 'Categorical'])
+    #max_categories = max([max_categoriesA, max_categoriesB])
 
     print("Extracting features and training model")
     classifier = get_pipeline()
-    classifier.fit(train, target.Target)
+    classifier.fit(train_info, target.Target)
 
     print("Saving the classifier")
     data_io.save_model(classifier)
