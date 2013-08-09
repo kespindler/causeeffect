@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn import cross_validation as cval
 from sklearn.pipeline import Pipeline
 import pandas as pd
 
@@ -15,6 +16,8 @@ def feature_extractor():
                 ('B: Normalized Entropy', 'B', f.SimpleTransform(transformer=f.normalized_entropy)),
                 ('Pearson R', ['A','B'], f.MultiColumnTransform(f.correlation)),
                 ('Pearson R Magnitude', ['A','B'], f.MultiColumnTransform(f.correlation_magnitude)),
+                #('Conditional A on B', ['A', 'A type', 'B', 'B type'], f.MultiColumnTransform(f.conditional_info)),
+                #('Conditional B on A', ['B', 'B type', 'A', 'A type'], f.MultiColumnTransform(f.conditional_info)),
                 ('Entropy Difference', ['A','B'], f.MultiColumnTransform(f.entropy_difference))]
     combined = f.FeatureMapper(features)
     return combined
@@ -31,11 +34,11 @@ def get_pipeline():
 
 if __name__=="__main__":
     print("Reading in the training data")
-    train = data_io.read_train_pairs()
+    train_raw = data_io.read_train_pairs()
     target = data_io.read_train_target()
     info = data_io.read_train_info()
 
-    train_info = train.join(info)
+    train = train_raw.join(info)
 
     #max_categoriesA = max(len(np.unique(x)) for x in 
     #    train['A'][info['A type'] == 'Categorical'])
@@ -43,9 +46,18 @@ if __name__=="__main__":
     #    train['B'][info['B type'] == 'Categorical'])
     #max_categories = max([max_categoriesA, max_categoriesB])
 
-    print("Extracting features and training model")
     classifier = get_pipeline()
-    classifier.fit(train_info, target.Target)
+    folds = cval.KFold(len(train), n_folds=5, indices=False)
+
+    print("Extracting features and training model")
+    results = []
+    for traincv, testcv in folds:
+        classifier.fit(train[traincv], target[traincv])
+        results.append(classifier.score(train[testcv], target[testcv]))
+
+    print('Score: ' + str(np.array(results).mean()))
+
+    #classifier.fit(train, target.Target)
 
     print("Saving the classifier")
     data_io.save_model(classifier)
