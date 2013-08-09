@@ -8,8 +8,12 @@ from sklearn.pipeline import Pipeline
 
 def feature_extractor():
     features = [('Number of Samples', 'A', f.SimpleTransform(transformer=len)),
-                ('A: Number of Unique Samples', 'A', f.SimpleTransform(transformer=f.count_unique)),
-                ('B: Number of Unique Samples', 'B', f.SimpleTransform(transformer=f.count_unique)),
+                #('A: Number of Unique Samples', 'A', f.SimpleTransform(transformer=f.count_unique)),
+                #('B: Number of Unique Samples', 'B', f.SimpleTransform(transformer=f.count_unique)),
+                
+                ('A: Number of Unique Samples', 'A', f.SimpleTransform(transformer=f.percentage_unique)),
+                ('B: Number of Unique Samples', 'B', f.SimpleTransform(transformer=f.percentage_unique)),
+
                 ('A: Normalized Entropy', 'A', f.SimpleTransform(transformer=f.normalized_entropy)),
                 ('B: Normalized Entropy', 'B', f.SimpleTransform(transformer=f.normalized_entropy)),
                 ('Pearson R', ['A','B'], f.MultiColumnTransform(f.correlation)),
