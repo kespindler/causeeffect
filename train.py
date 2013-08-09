@@ -47,14 +47,16 @@ if __name__=="__main__":
     #max_categories = max([max_categoriesA, max_categoriesB])
 
     classifier = get_pipeline()
-    folds = cval.KFold(len(train), n_folds=5, indices=False)
+    folds = cval.KFold(len(train), n_folds=3, indices=False)
 
-    print("Extracting features and training model")
     results = []
-    for traincv, testcv in folds:
+    for i, fold in enumerate(folds):
+        print("Extracting features and training model for fold " + str(i))
+        traincv, testcv = fold
         classifier.fit(train[traincv], target[traincv])
         results.append(classifier.score(train[testcv], target[testcv]))
 
+    print(results)
     print('Score: ' + str(np.array(results).mean()))
 
     #classifier.fit(train, target.Target)
