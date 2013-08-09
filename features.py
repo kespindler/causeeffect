@@ -45,11 +45,11 @@ def injectivity(x,y):
     print
 
 def count_unique(x):
-<<<<<<< HEAD
+
     return len(set(x))
 def percentage_unique(x):
     return 1.0 * count_unique(x)/len(x)
-=======
+
     return len(np.unique(x))
 
 def percentage_unique(x):
@@ -57,7 +57,7 @@ def percentage_unique(x):
 
 def conditional_info(aa, aii, bb, bii):
     return None
->>>>>>> 36165783014fe5786fb637dedb2d190f16150294
+
 
 def normalized_entropy(x):
     x = (x - np.mean(x)) / np.std(x)
