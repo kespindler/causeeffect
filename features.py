@@ -3,6 +3,8 @@ from sklearn.base import BaseEstimator
 from scipy.special import psi
 from scipy.stats.stats import pearsonr
 
+import collections
+
 class FeatureMapper:
     def __init__(self, features):
         self.features = features
@@ -38,26 +40,34 @@ class FeatureMapper:
             return extracted[0]
 
 def identity(x):
-    print "type of x is " + str(type(x))
+    #type of x is <type 'numpy.ndarray'>
     return x
+def measureAbsSum(list1):
+    """takes a list of values of the y-values associated with one x value, returns their absolute distance
+    from the mean --should account for number of samples?? """
+    mean = np.mean(list1)
+    
+    return sum([abs(1.0*x-mean) for x in list1])
+
 def injectivity(x,y):
-    print "type of x and y"
-    print
+    """given a measure, returns an metric of the 'injectivity' of x -> y"""
+    assert (len(x) == len(y))
+    dx = collections.defaultdict(list)
+    for index in xrange(len(x)):
+        dx[x[index]].append(y[index])
+    
+    totalscore = 0.0
+    for k, v in dx.iteritems():
+        if len(v) > 1: #each x value has more then 1 y-value
+            totalscore += measureAbsSum(v)
+    
+    return totalscore    
+        
 
 def count_unique(x):
-
     return len(set(x))
 def percentage_unique(x):
     return 1.0 * count_unique(x)/len(x)
-
-    return len(np.unique(x))
-
-def percentage_unique(x):
-    return 1.0 * count_unique(x)/len(x)
-
-def conditional_info(aa, aii, bb, bii):
-    return None
-
 
 def normalized_entropy(x):
     x = (x - np.mean(x)) / np.std(x)
@@ -80,6 +90,9 @@ def correlation(x, y):
 
 def correlation_magnitude(x, y):
     return abs(correlation(x, y))
+def mutual_info(x,y):
+    return 
+
 
 class SimpleTransform(BaseEstimator):
     def __init__(self, transformer=identity):
