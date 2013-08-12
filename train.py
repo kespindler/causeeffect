@@ -26,6 +26,9 @@ def feature_extractor():
                 #('Conditional B on A', ['B', 'B type', 'A', 'A type'], f.MultiColumnTransform(f.conditional_info)),
                 ('A: Injectivity into B', ['A','B'], f.MultiColumnTransform(f.injectivity)),
                 ('B: Injectivity into A', ['B','A'], f.MultiColumnTransform(f.injectivity)),
+
+                ('Conditional A on B', ['A', 'A type', 'B', 'B type'], f.MultiColumnTransform(f.conditional_info)),
+                ('Conditional B on A', ['B', 'B type', 'A', 'A type'], f.MultiColumnTransform(f.conditional_info)),
                 ('Entropy Difference', ['A','B'], f.MultiColumnTransform(f.entropy_difference))]
 
     combined = f.FeatureMapper(features)
@@ -57,6 +60,7 @@ if __name__=="__main__":
     #    train['B'][info['B type'] == 'Categorical'])
     #max_categories = max([max_categoriesA, max_categoriesB])
 
+<<<<<<< Updated upstream
     classifier = get_pipeline()
 
     #CV CODE
@@ -79,3 +83,23 @@ if __name__=="__main__":
 
     print("Relative Feature Importance")
     print classifier.feature_importances_  
+=======
+    #classifier = get_pipeline()
+    #folds = cval.KFold(len(train), n_folds=2, indices=False)
+#
+#    results = []
+#    for i, fold in enumerate(folds):
+#        print("Extracting features and training model for fold " + str(i))
+#        traincv, testcv = fold
+#        classifier.fit(train[traincv], target[traincv])
+#        results.append(classifier.score(train[testcv], target[testcv]))
+#
+#    print(results)
+#    print('Score: ' + str(np.array(results).mean()))
+#
+#    #classifier.fit(train, target.Target)
+#
+#    print("Saving the classifier")
+#    data_io.save_model(classifier)
+#  
+>>>>>>> Stashed changes

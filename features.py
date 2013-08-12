@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.base import BaseEstimator
 from scipy.special import psi
 from scipy.stats.stats import pearsonr
+from scipy.stats import gaussian_kde
 
 import collections
 
@@ -68,6 +69,25 @@ def count_unique(x):
     return len(set(x))
 def percentage_unique(x):
     return 1.0 * count_unique(x)/len(x)
+
+def conditional_info(aa, aii, bb, bii):
+    for a, ai, b, bi in zip(aa, aii, bb, bii):
+        #a, b are dataset, 
+        #ai, bi are tag
+        if ai == 'Numerical':
+            if bi == 'Numerical':
+                # numerical
+                dataset = np.append(a.T)
+            else:
+                pass
+                # categorical/binary
+        else:
+            if bi == 'Numerical':
+                pass
+                # numerical
+            else:
+                pass
+                #categorical
 
 def normalized_entropy(x):
     x = (x - np.mean(x)) / np.std(x)
