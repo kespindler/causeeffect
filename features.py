@@ -1,10 +1,13 @@
 import numpy as np
 from sklearn.base import BaseEstimator
+from numpy import log
 from scipy.special import psi
 from scipy.stats.stats import pearsonr
+from scipy.integrate import quad, dblquad
 from scipy.stats import gaussian_kde
-
 import collections
+
+inf = float('inf')
 
 class FeatureMapper:
     def __init__(self, features):
@@ -70,24 +73,55 @@ def count_unique(x):
 def percentage_unique(x):
     return 1.0 * count_unique(x)/len(x)
 
-def conditional_info(aa, aii, bb, bii):
-    for a, ai, b, bi in zip(aa, aii, bb, bii):
-        #a, b are dataset, 
-        #ai, bi are tag
-        if ai == 'Numerical':
-            if bi == 'Numerical':
-                # numerical
-                dataset = np.append(a.T)
-            else:
-                pass
-                # categorical/binary
+# function -> function(real -> real)
+def Hintegrand(f):
+    def g(x):
+        prob = f(x)
+        return prob*log(prob)
+    return g
+
+# a, b is a dataset pair
+# ai, bi is dataset info ('Numerical', 'Binary', 'Categorical')
+def singleH(d, di):
+    if di == 'Numerical':
+        kernel = gaussian_kde(d)
+        hpos, err = quad(Hintegrand(kernel), -inf, inf)
+        print 'err for', d[:5], 'is', err
+    else:
+        freq = np.bincount(d).astype('float64') / len(d)
+        hpos = np.dot(log(freq), freq)
+    return -hpos
+
+def conditional_info(a, ai, b, bi):
+    #aa, aii
+    Ha = singleH(a, ai)
+    Hb = singleH(b, bi)
+
+    if ai == 'Numerical':
+        if bi == 'Numerical':
+            #Num, Num
+            dataset = np.append(a.T, b.T)
+            kernel = gaussian_kde(dataset)
+            hpos, err = dblquad(Hintegrand(kernel), 
+                -inf, inf, -inf, inf)
+            print err
+            return -hpos
         else:
-            if bi == 'Numerical':
-                pass
-                # numerical
-            else:
-                pass
-                #categorical
+            #a Num, a Cat
+            return 5 
+            ...
+    else:
+        if bi == 'Numerical':
+            #a Cat, b Num
+            return 5
+            ...
+        else:
+            #Cat, Cat
+            freq_a = np.bincount(a).astype('float64') / len(a)
+            freq_b = np.bincount(b).astype('float64') / len(b)
+            freq_mat = np.outer(freqA, freqB)
+            hpos = np.sum(freq_mat * log(freq_mat))
+            return -hpos
 
 def normalized_entropy(x):
     x = (x - np.mean(x)) / np.std(x)
