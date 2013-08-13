@@ -22,13 +22,11 @@ def feature_extractor():
                 ('B: Normalized Entropy', 'B', f.SimpleTransform(transformer=f.normalized_entropy)),
                 ('Pearson R', ['A','B'], f.MultiColumnTransform(f.correlation)),
                 ('Pearson R Magnitude', ['A','B'], f.MultiColumnTransform(f.correlation_magnitude)),
-                #('Conditional A on B', ['A', 'A type', 'B', 'B type'], f.MultiColumnTransform(f.conditional_info)),
-                #('Conditional B on A', ['B', 'B type', 'A', 'A type'], f.MultiColumnTransform(f.conditional_info)),
                 ('A: Injectivity into B', ['A','B'], f.MultiColumnTransform(f.injectivity)),
                 ('B: Injectivity into A', ['B','A'], f.MultiColumnTransform(f.injectivity)),
 
-                #('Conditional A on B', ['A', 'A type', 'B', 'B type'], f.MultiColumnTransform(f.conditional_info)),
-                #('Conditional B on A', ['B', 'B type', 'A', 'A type'], f.MultiColumnTransform(f.conditional_info)),
+                ('Conditional A on B', ['A', 'A type', 'B', 'B type'], f.MultiColumnTransform(f.conditional_info)),
+                ('Conditional B on A', ['B', 'B type', 'A', 'A type'], f.MultiColumnTransform(f.conditional_info)),
                 ('Entropy Difference', ['A','B'], f.MultiColumnTransform(f.entropy_difference))]
 
     combined = f.FeatureMapper(features)
