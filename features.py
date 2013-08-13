@@ -108,13 +108,11 @@ def conditional_info(a, ai, b, bi):
             return -hpos
         else:
             #a Num, a Cat
-            return 5 
-            ...
+            return 0 
     else:
         if bi == 'Numerical':
             #a Cat, b Num
-            return 5
-            ...
+            return 0
         else:
             #Cat, Cat
             freq_a = np.bincount(a).astype('float64') / len(a)
