@@ -88,6 +88,7 @@ def singleH(d, di):
         hpos, err = quad(Hintegrand(kernel), -inf, inf)
         print 'err for', d[:5], 'is', err
     else:
+        import pdb;pdb.set_trace()
         freq = np.bincount(d).astype('float64') / len(d)
         hpos = np.dot(log(freq), freq)
     return -hpos

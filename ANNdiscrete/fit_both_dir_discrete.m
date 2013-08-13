@@ -1,4 +1,4 @@
-function [fct_fw, p_val_fw, fct_bw, p_val_bw]=fit_both_dir_discrete(X,cycX,Y,cycY,level,doplots)
+function [fct_fw, p_val_fw, fct_bw, p_val_bw, decisionval]=fit_both_dir_discrete(X,cycX,Y,cycY,level,doplots)
 %-fits a discrete additive noise model in both directions X->Y and Y->X.
 %
 %-X and Y should both be of size (n,1), 
@@ -54,7 +54,7 @@ function [fct_fw, p_val_fw, fct_bw, p_val_bw]=fit_both_dir_discrete(X,cycX,Y,cyc
 if cycY==0
    [fct_fw p_val_fw]=fit_discrete(X,Y,level,doplots,0);
 elseif cycY==1
-   [fct_fw p_val_fw]=fit_discrete_cyclic(X,Y,level,doplots,0);
+   [fct_fw, p_val_fw]=fit_discrete_cyclic(X,Y,level,doplots,0);
 end
 
 if cycX==0
@@ -72,28 +72,32 @@ if p_val_bw>level
     fct_bw
 end
 %p_val_fw
-if p_val_fw>level
-    display('ANM could be fitted in the direction X->Y using fct_fw.');
-end
-%p_val_bw
-if p_val_bw>level
-    display('ANM could be fitted in the direction Y->X using fct_bw.');
-end
+% if p_val_fw>level
+%     display('ANM could be fitted in the direction X->Y using fct_fw.');
+% end
+% %p_val_bw
+% if p_val_bw>level
+%     display('ANM could be fitted in the direction Y->X using fct_bw.');
+% end
 if (p_val_bw>level)&(p_val_fw<level)
-    display('Only one ANM could be fit. The method infers Y->X.');
+%     display('Only one ANM could be fit. The method infers Y->X.');
+    decisionval = 2;
 end
 if (p_val_bw<level)&(p_val_fw>level)
-    display('Only one ANM could be fit. The method infers X->Y.');
+%     display('Only one ANM could be fit. The method infers X->Y.');
+    decisionval = 1;
 end
 if (p_val_bw<level)&(p_val_fw<level)
-    display('No ANM could be fit. The method does not know the causal direction.');
+%     display('No ANM could be fit. The method does not know the causal direction.');
+    decisionval = 3;
 end
 if (p_val_bw>level)&(p_val_fw>level)
-    display('Both ANM could be fit. The method does not know the causal direction.');
+%     display('Both ANM could be fit. The method does not know the causal direction.');
+    decisionval = 3;
 end
 %are X and Y independent?
 p_val_ind=chi_sq_quant(X,Y,length(unique(X)),length(unique(Y)));
 if p_val_ind>level
     display('But note that X and Y are considered to be independent anyway. (Thus no causal relation.)');
+    decisionval = 4;
 end
-
