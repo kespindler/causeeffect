@@ -36,7 +36,8 @@ num_pos_fct=min(max(Y)-min(Y),20);
 %X_new takes values from 1...X_new_max
 %Y_values are everything between Y_min and Y_max
 [X_values, ~, X_new]=unique(X);
-Y_values=min(Y):1:max(Y);Y_values=Y_values';
+Y_values=min(Y):max(Y);
+Y_values=Y_values';
 
 %compute common zaehldichte
 %for i=1:length(X_values)
@@ -51,14 +52,24 @@ if size(X_values,1)==1 || size(Y_values,1)==1
 %    display('okokokokokoko')
 else
     p=hist3([X Y], {X_values Y_values});
-    %[Y_values'; p]
 
-    numX = length(X_values); %
+    numX = length(X_values);
     
-    fct=NaN(numX); %%% forward function. <- what we're actually trying to create.
-    cand = cell(numX); % should just make this a 2d array...
+    fct=NaN([numX 1]); %%% forward function. <- what we're actually trying to create.
+    cand = cell([numX 1]); % should just make this a 2d array...
 
-    
+%    [~, b] = sort(p, 2);
+%    argmaxP = b(:,size(b,2));
+%    savedP = max(p, [], 2) + 1;
+%    
+%    for i=1:length(X_values)
+%        p(i,:) = p(i,:) + 1./(2*abs((1:size(p,2))-argmaxP(i)));
+%        p(i,argmaxP(i)) = savedP(i);
+%    end
+%    
+%    [~, b] = sort(p, 2);
+%    argmaxP = b(:,size(b,2));
+   
     for i=1:length(X_values)
         [~, b]=sort(p(i,:));
         lastb = b(length(b));  % just argmax of p(i, :)
@@ -67,8 +78,7 @@ else
         p(i,:) = p(i,:) + 1./(2*abs((1:size(p,2))-lastb));
         p(i,lastb) = savedp;
         
-        
-        
+        [~, b]=sort(p(i,:));
         cand{i}=b; 
         
         fct(i) = Y_values(lastb);
