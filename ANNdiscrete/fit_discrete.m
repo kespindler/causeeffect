@@ -53,17 +53,24 @@ else
     p=hist3([X Y], {X_values Y_values});
     %[Y_values'; p]
 
-    numX = length(X_values);
-    fct=NaN(numX);
+    numX = length(X_values); %
+    
+    fct=NaN(numX); %%% forward function. <- what we're actually trying to create.
     cand = cell(numX); % should just make this a 2d array...
 
+    
     for i=1:length(X_values)
         [~, b]=sort(p(i,:));
-        lastb = b(length(b));
-        savedp = p(i, lastb) + 1;
+        lastb = b(length(b));  % just argmax of p(i, :)
+        savedp = p(i, lastb) + 1; %% max of (p(i,:)) + 1;
+        
         p(i,:) = p(i,:) + 1./(2*abs((1:size(p,2))-lastb));
         p(i,lastb) = savedp;
-        cand{i}=b;
+        
+        
+        
+        cand{i}=b; 
+        
         fct(i) = Y_values(lastb);
     end
     
@@ -90,10 +97,11 @@ else
     pos_fct = cell(num_pos_fct+1);
     
     while (p_val<level) && (i<num_iter)
-        for j_new=randperm(length(X_values))
-            for j=1:(num_pos_fct+1)
-                pos_fct{j}=fct;
-                pos_fct{j}(j_new)=Y_values(cand{j_new}(length(cand{j_new})-(j-1)));
+        % for each run cycle. 
+        for j_new = randperm(numX)
+            for j = 1:(num_pos_fct+1)
+                pos_fct{j} = fct;
+                pos_fct{j}(j_new) = Y_values(cand{j_new}(length(cand{j_new})-(j-1)));
                 yhat=pos_fct{j}(X_new);
                 eps=Y-yhat;
                 [p_val_comp(j), p_val_comp2(j)]=chi_sq_quant(eps, X, length(unique(eps)), length(X_values));
@@ -102,15 +110,15 @@ else
             if aa<1e-3
                 [~, j_max]=min(p_val_comp2);
             end
-            fct=pos_fct{j_max};    
-            yhat=fct(X_new);
-            eps=Y-yhat;
-            p_val=chi_sq_quant(eps,X,length(unique(eps)),length(X_values));
-            if doplots==1
-                display(['fitting ' int2str(dir+1) '. direction']);
-                figure(dir+1);
-                plot_fct_dens(X, X_values, X_new, Y, Y_values, fct, p_val, level, dir,1);
-            end
+            fct = pos_fct{j_max};    
+            yhat = fct(X_new);
+            eps = Y - yhat;
+            p_val = chi_sq_quant(eps,X,length(unique(eps)),length(X_values));
+%             if doplots==1
+%                 display(['fitting ' int2str(dir+1) '. direction']);
+%                 figure(dir+1);
+%                 plot_fct_dens(X, X_values, X_new, Y, Y_values, fct, p_val, level, dir,1);
+%             end
         end
         i=i+1;
     end

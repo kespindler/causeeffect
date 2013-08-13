@@ -40,13 +40,12 @@ if num_states_x==1 || num_states_y==1
     T=0;
 else
     n_mat=hist3([x y], {0:(num_states_x-1) 0:(num_states_y-1)});
-    %sum(sum(n_mat~=n_mat2))
 
     p=sum(n_mat,2);
     w=sum(n_mat,1);
     nullerp=sum(p==0);
     nullerw=sum(w==0);
-    tmp = zeros(num_states_x, num_states_y);
+    
     n_star = p*w ./ length(x);
     
     tmp = (n_mat - n_star) .^2 ./ n_star;
