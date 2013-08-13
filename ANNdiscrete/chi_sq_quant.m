@@ -46,18 +46,12 @@ else
     w=sum(n_mat,1);
     nullerp=sum(p==0);
     nullerw=sum(w==0);
-    n_star = NaN(num_states_x, num_states_y);
-    tmp = NaN(num_states_x, num_states_y);
-    for i=1:num_states_x
-        for j=1:num_states_y
-            n_star(i,j)=(p(i)*w(j))/length(x);
-            if n_star(i,j)>0
-                tmp(i,j)=(n_mat(i,j)-n_star(i,j))^2/n_star(i,j);
-            else
-                tmp(i,j)=0;
-            end
-        end
-    end
+    tmp = zeros(num_states_x, num_states_y);
+    n_star = p*w ./ length(x);
+    
+    tmp = (n_mat - n_star) .^2 ./ n_star;
+    tmp(n_star <= 0) = 0;
+
     T=sum(sum(tmp));
     result=1-chi2cdf(T,(num_states_x-1-nullerp)*(num_states_y-1-nullerw));
 end
