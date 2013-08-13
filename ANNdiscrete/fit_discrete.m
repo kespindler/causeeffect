@@ -59,15 +59,10 @@ else
 
     for i=1:length(X_values)
         [~, b]=sort(p(i,:));
-        for k=1:size(p,2)
-            if k~=b(length(b))    %% PROF 25.7% time spent here
-                p(i,k)=p(i,k)+1/(2*abs(k-b(length(b)))); %% PROF 28.6% time spent here.
-            else
-                p(i,k)=p(i,k)+1;
-            end
-        end     % PROF 28.2 % time spent here?!?
-        %       implies a mem mgt issue
-        % http://www.mathworks.com/matlabcentral/newsreader/view_thread/281822
+        lastb = b(length(b));
+        savedp = p(i, lastb) + 1;
+        p(i,:) = p(i,:) + 1./(2*abs((1:size(p,2))-lastb));
+        p(i,lastb) = savedp;
         [~, b]=sort(p(i,:));
         cand{i}=b;
         fct(i) = Y_values(b(length(b)));
