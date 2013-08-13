@@ -8,6 +8,8 @@ from scipy.stats import gaussian_kde
 import collections
 
 inf = float('inf')
+finf = lambda x: inf
+nfinf = lambda x: -inf
 
 class FeatureMapper:
     def __init__(self, features):
@@ -88,8 +90,7 @@ def singleH(d, di):
         hpos, err = quad(Hintegrand(kernel), -inf, inf)
         print 'err for', d[:5], 'is', err
     else:
-        import pdb;pdb.set_trace()
-        freq = np.bincount(d).astype('float64') / len(d)
+        freq = np.bincount(d.astype('int32')).astype('float64') / len(d)
         hpos = np.dot(log(freq), freq)
     return -hpos
 
@@ -104,7 +105,7 @@ def conditional_info(a, ai, b, bi):
             dataset = np.append(a.T, b.T)
             kernel = gaussian_kde(dataset)
             hpos, err = dblquad(Hintegrand(kernel), 
-                -inf, inf, -inf, inf)
+                -inf, inf, nfinf, finf)
             print err
             return -hpos
         else:
@@ -116,8 +117,8 @@ def conditional_info(a, ai, b, bi):
             return 0
         else:
             #Cat, Cat
-            freq_a = np.bincount(a).astype('float64') / len(a)
-            freq_b = np.bincount(b).astype('float64') / len(b)
+            freq_a = np.bincount(a.astype('int32')).astype('float64') / len(a)
+            freq_b = np.bincount(b.astype('int32')).astype('float64') / len(b)
             freq_mat = np.outer(freqA, freqB)
             hpos = np.sum(freq_mat * log(freq_mat))
             return -hpos
