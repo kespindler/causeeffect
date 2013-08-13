@@ -50,27 +50,27 @@ function [fct_fw, p_val_fw, fct_bw, p_val_bw, decisionval]=fit_both_dir_discrete
 %    You should have received a copy of the GNU General Public License
 %    along with discrete_anm.  If not, see <http://www.gnu.org/licenses/>.    
 
-
+% Fit in 1 direction
 if cycY==0
-   [fct_fw p_val_fw]=fit_discrete(X,Y,level,doplots,0);
-elseif cycY==1
-   [fct_fw, p_val_fw]=fit_discrete_cyclic(X,Y,level,doplots,0);
+   [fct_fw, p_val_fw]=fit_discrete(X, Y, level, doplots, 0);
+elseif cycY == 1
+   [fct_fw, p_val_fw]=fit_discrete_cyclic(X, Y, level, doplots, 0);
 end
-
+% Fit in the other direction
 if cycX==0
-   [fct_bw p_val_bw]=fit_discrete(Y,X,level,doplots,1);
+   [fct_bw, p_val_bw]=fit_discrete(Y,X,level,doplots,1);
 elseif cycX==1
-   [fct_bw p_val_bw]=fit_discrete_cyclic(Y,X,level,doplots,1);
+   [fct_bw, p_val_bw]=fit_discrete_cyclic(Y,X,level,doplots,1);
 end
 
 
 
-if p_val_fw>level
-    fct_fw
-end
-if p_val_bw>level
-    fct_bw
-end
+% if p_val_fw>level
+%     fct_fw;
+% end
+% if p_val_bw>level
+%     fct_bw;
+% end
 %p_val_fw
 % if p_val_fw>level
 %     display('ANM could be fitted in the direction X->Y using fct_fw.');
@@ -79,6 +79,10 @@ end
 % if p_val_bw>level
 %     display('ANM could be fitted in the direction Y->X using fct_bw.');
 % end
+
+
+
+% Set the decision level
 if (p_val_bw>level)&(p_val_fw<level)
 %     display('Only one ANM could be fit. The method infers Y->X.');
     decisionval = 2;
@@ -98,6 +102,6 @@ end
 %are X and Y independent?
 p_val_ind=chi_sq_quant(X,Y,length(unique(X)),length(unique(Y)));
 if p_val_ind>level
-    display('But note that X and Y are considered to be independent anyway. (Thus no causal relation.)');
+%     display('But note that X and Y are considered to be independent anyway. (Thus no causal relation.)');
     decisionval = 4;
 end
