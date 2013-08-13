@@ -25,6 +25,7 @@ def feature_extractor():
                 ('A: Injectivity into B', ['A','B'], f.MultiColumnTransform(f.injectivity)),
                 ('B: Injectivity into A', ['B','A'], f.MultiColumnTransform(f.injectivity)),
 
+                # EXPERIMENTAL FEATURES AT THE MOMENT. PROBABLY WANT COMMENTED OUT
                 ('Conditional A on B', ['A', 'A type', 'B', 'B type'], f.MultiColumnTransform(f.conditional_info)),
                 ('Conditional B on A', ['B', 'B type', 'A', 'A type'], f.MultiColumnTransform(f.conditional_info)),
                 ('Entropy Difference', ['A','B'], f.MultiColumnTransform(f.entropy_difference))]
