@@ -25,8 +25,8 @@ function [result T]=chi_sq_quant(x,y,num_states_x,num_states_y)
 %
 %    You should have received a copy of the GNU General Public License
 %    along with discrete_anm.  If not, see <http://www.gnu.org/licenses/>.    
-[a, b, x]=unique(x);
-[a, b, y]=unique(y);
+[~, ~, x]=unique(x);
+[~, ~, y]=unique(y);
 x=x-min(x);y=y-min(y);
 
 %for i=1:num_states_x
@@ -46,6 +46,8 @@ else
     w=sum(n_mat,1);
     nullerp=sum(p==0);
     nullerw=sum(w==0);
+    n_star = NaN(num_states_x, num_states_y);
+    tmp = NaN(num_states_x, num_states_y);
     for i=1:num_states_x
         for j=1:num_states_y
             n_star(i,j)=(p(i)*w(j))/length(x);
@@ -57,6 +59,5 @@ else
         end
     end
     T=sum(sum(tmp));
-    % T=sum(sum(((n-n_star).^2)./n_star));
     result=1-chi2cdf(T,(num_states_x-1-nullerp)*(num_states_y-1-nullerw));
 end
