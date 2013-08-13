@@ -63,9 +63,8 @@ else
         savedp = p(i, lastb) + 1;
         p(i,:) = p(i,:) + 1./(2*abs((1:size(p,2))-lastb));
         p(i,lastb) = savedp;
-        [~, b]=sort(p(i,:));
         cand{i}=b;
-        fct(i) = Y_values(b(length(b)));
+        fct(i) = Y_values(lastb);
     end
     
     yhat=fct(X_new);
