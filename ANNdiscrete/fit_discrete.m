@@ -1,4 +1,4 @@
-function [fct, p_val]=fit_discrete(X,Y,level,doplots,dir)
+function [fct, p_val]=fit_discrete(X,Y,level,xtype,ytype)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %-please cite
@@ -29,6 +29,13 @@ function [fct, p_val]=fit_discrete(X,Y,level,doplots,dir)
 %%%%%%%%%%
 %parameter
 %%%%%%%%%%
+
+if xtype == 1
+    % TODO discretize
+end
+if ytype == 2
+    % TODO discretize
+end
 num_iter=10;
 num_pos_fct=min(max(Y)-min(Y),20);
 

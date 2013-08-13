@@ -1,4 +1,4 @@
-function [fct_fw, p_val_fw, fct_bw, p_val_bw, decisionval]=fit_both_dir_discrete(X,cycX,Y,cycY,level,doplots)
+function [fct_fw, p_val_fw, fct_bw, p_val_bw, decisionval]=fit_both_dir_discrete(X,Y,level,xtype,ytype)
 %-fits a discrete additive noise model in both directions X->Y and Y->X.
 %
 %-X and Y should both be of size (n,1), 
@@ -51,17 +51,17 @@ function [fct_fw, p_val_fw, fct_bw, p_val_bw, decisionval]=fit_both_dir_discrete
 %    along with discrete_anm.  If not, see <http://www.gnu.org/licenses/>.    
 
 % Fit in 1 direction
-if cycY==0
-   [fct_fw, p_val_fw]=fit_discrete(X, Y, level, doplots, 0);
-elseif cycY == 1
-   [fct_fw, p_val_fw]=fit_discrete_cyclic(X, Y, level, doplots, 0);
-end
+% if cycY==0
+[fct_fw, p_val_fw]=fit_discrete(X, Y, level, xtype, ytype);
+% elseif cycY == 1
+%    [fct_fw, p_val_fw]=fit_discrete_cyclic(X, Y, level, doplots, 0);
+% end
 % Fit in the other direction
-if cycX==0
-   [fct_bw, p_val_bw]=fit_discrete(Y,X,level,doplots,1);
-elseif cycX==1
-   [fct_bw, p_val_bw]=fit_discrete_cyclic(Y,X,level,doplots,1);
-end
+% if cycX==0
+[fct_bw, p_val_bw]=fit_discrete(Y, X, level, ytype, xtype);
+% elseif cycX==1
+%    [fct_bw, p_val_bw]=fit_discrete_cyclic(Y,X,level,doplots,1);
+% end
 
 % if p_val_fw>level
 %     fct_fw;
