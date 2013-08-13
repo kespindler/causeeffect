@@ -60,12 +60,14 @@ else
     for i=1:length(X_values)
         [~, b]=sort(p(i,:));
         for k=1:size(p,2)
-            if k~=b(length(b))
-                p(i,k)=p(i,k)+1/(2*abs(k-b(length(b))));
+            if k~=b(length(b))    %% PROF 25.7% time spent here
+                p(i,k)=p(i,k)+1/(2*abs(k-b(length(b)))); %% PROF 28.6% time spent here.
             else
                 p(i,k)=p(i,k)+1;
             end
-        end
+        end     % PROF 28.2 % time spent here?!?
+        %       implies a mem mgt issue
+        % http://www.mathworks.com/matlabcentral/newsreader/view_thread/281822
         [~, b]=sort(p(i,:));
         cand{i}=b;
         fct(i) = Y_values(b(length(b)));
@@ -77,7 +79,7 @@ else
         display('Warning!! there is a deterministic relation between X and Y');
         p_val=1;
     else
-        p_val=chi_sq_quant(eps,X,length(unique(eps)),length(X_values));
+        p_val=chi_sq_quant(eps,X,length(unique(eps)),length(X_values)); % PROF 8% time here
     end
 %     if doplots==1
         %fct
@@ -95,7 +97,6 @@ else
     
     while (p_val<level) && (i<num_iter)
         for j_new=randperm(length(X_values))
-
             for j=1:(num_pos_fct+1)
                 pos_fct{j}=fct;
                 pos_fct{j}(j_new)=Y_values(cand{j_new}(length(cand{j_new})-(j-1)));
@@ -120,8 +121,8 @@ else
         i=i+1;
     end
     fct=fct+round(mean(eps));
-    if doplots==0.5
-        figure(dir+1);
-        plot_fct_dens(X, X_values, X_new, Y, Y_values, fct, p_val, level, dir,0);
-    end
+%     if doplots==0.5
+%         figure(dir+1);
+%         plot_fct_dens(X, X_values, X_new, Y, Y_values, fct, p_val, level, dir,0);
+%     end
 end

@@ -63,8 +63,6 @@ elseif cycX==1
    [fct_bw, p_val_bw]=fit_discrete_cyclic(Y,X,level,doplots,1);
 end
 
-
-
 % if p_val_fw>level
 %     fct_fw;
 % end
@@ -80,22 +78,20 @@ end
 %     display('ANM could be fitted in the direction Y->X using fct_bw.');
 % end
 
-
-
 % Set the decision level
-if (p_val_bw>level)&(p_val_fw<level)
+if (p_val_bw>level) && (p_val_fw<level)
 %     display('Only one ANM could be fit. The method infers Y->X.');
     decisionval = 2;
 end
-if (p_val_bw<level)&(p_val_fw>level)
+if (p_val_bw<level) && (p_val_fw>level)
 %     display('Only one ANM could be fit. The method infers X->Y.');
     decisionval = 1;
 end
-if (p_val_bw<level)&(p_val_fw<level)
+if (p_val_bw<level) && (p_val_fw<level)
 %     display('No ANM could be fit. The method does not know the causal direction.');
     decisionval = 3;
 end
-if (p_val_bw>level)&(p_val_fw>level)
+if (p_val_bw>level) && (p_val_fw>level)
 %     display('Both ANM could be fit. The method does not know the causal direction.');
     decisionval = 3;
 end

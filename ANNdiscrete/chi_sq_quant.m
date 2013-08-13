@@ -25,8 +25,8 @@ function [result T]=chi_sq_quant(x,y,num_states_x,num_states_y)
 %
 %    You should have received a copy of the GNU General Public License
 %    along with discrete_anm.  If not, see <http://www.gnu.org/licenses/>.    
-[a b x]=unique(x);
-[a b y]=unique(y);
+[a, b, x]=unique(x);
+[a, b, y]=unique(y);
 x=x-min(x);y=y-min(y);
 
 %for i=1:num_states_x
@@ -35,7 +35,7 @@ x=x-min(x);y=y-min(y);
 %    end
 %end
 
-if num_states_x==1|num_states_y==1
+if num_states_x==1 || num_states_y==1
     result=1;
     T=0;
 else
