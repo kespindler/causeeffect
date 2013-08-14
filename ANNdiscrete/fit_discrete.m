@@ -1,4 +1,5 @@
 function [fct, p_val]=fit_discrete(X,Y,level,xtype,ytype)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %-please cite
@@ -32,10 +33,12 @@ function [fct, p_val]=fit_discrete(X,Y,level,xtype,ytype)
 
 if xtype == 1
     % TODO discretize
+    X = descretizeContinuous(X);
 end
-if ytype == 2
-    % TODO discretize
+if ytype == 1
+    Y = descretizeContinuous(Y);
 end
+
 num_iter=10;
 num_pos_fct=min(max(Y)-min(Y),20);
 
