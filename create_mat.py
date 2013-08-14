@@ -44,8 +44,8 @@ if DATA == 'train':
     info = data_io.read_train_info() 
     train = data_io.read_train_pairs()
 elif DATA == 'test':
-    #info = data_io.read_train_info() 
-    #train = data_io.read_train_pairs()
+    info = data_io.read_train_info() 
+    train = data_io.read_train_pairs()
 else:
     raise ValueError
 
