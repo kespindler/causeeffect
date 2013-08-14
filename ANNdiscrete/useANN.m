@@ -12,4 +12,4 @@ for i = 1:N % %[1:2 5:7]
     decisions(i) = decision;
     [i decision p_val1 p_val2]
 end
-save('decisions.mat', 'decisions');
+save('/Developer/CauseEffectPairs/matlab/decisions.mat', 'decisions');
