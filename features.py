@@ -6,10 +6,14 @@ from scipy.stats.stats import pearsonr
 from scipy.integrate import quad, dblquad
 from scipy.stats import gaussian_kde
 import collections
+from scipy.io import loadmat
 
 inf = float('inf')
 finf = lambda x: inf
 nfinf = lambda x: -inf
+
+entropy = loadmat('matlab/entropy.mat')['entropy']
+decisions = loadmat('matlab/decisions.mat')['decisions'].flatten()
 
 class FeatureMapper:
     def __init__(self, features):
@@ -70,50 +74,20 @@ def injectivity(x,y):
     
     return totalscore    
         
-
 def count_unique(x):
     return len(set(x))
+
 def percentage_unique(x):
     return 1.0 * count_unique(x)/len(x)
 
-# function -> function(real -> real)
-def Hintegrand(f):
-    def g(x):
-        prob = f(x)
-        return prob*log(prob)
-    return g
+def inverse_conditional_info(i):
+    return entropy[i, 1]
 
-# a, b is a dataset pair
-# ai, bi is dataset info ('Numerical', 'Binary', 'Categorical')
-def conditional_info(a, ai, b, bi):
-    # You're just gonna bin shit.
-    #aa, aii
-    Ha = singleH(a, ai)
-    Hb = singleH(b, bi)
+def conditional_info(i):
+    return entropy[i, 0]
 
-    if ai == 'Numerical':
-        if bi == 'Numerical':
-            #Num, Num
-            dataset = np.append(a.T, b.T)
-            kernel = gaussian_kde(dataset)
-            hpos, err = dblquad(Hintegrand(kernel), 
-                -inf, inf, nfinf, finf)
-            print err
-            return -hpos
-        else:
-            #a Num, a Cat
-            return 0 
-    else:
-        if bi == 'Numerical':
-            #a Cat, b Num
-            return 0
-        else:
-            #Cat, Cat
-            freq_a = np.bincount(a.astype('int32')).astype('float64') / len(a)
-            freq_b = np.bincount(b.astype('int32')).astype('float64') / len(b)
-            freq_mat = np.outer(freqA, freqB)
-            hpos = np.sum(freq_mat * log(freq_mat))
-            return -hpos
+def anm_decision(i):
+    return decisions[i]
 
 def normalized_entropy(x):
     x = (x - np.mean(x)) / np.std(x)
@@ -136,9 +110,9 @@ def correlation(x, y):
 
 def correlation_magnitude(x, y):
     return abs(correlation(x, y))
+
 def mutual_info(x,y):
     return 
-
 
 class SimpleTransform(BaseEstimator):
     def __init__(self, transformer=identity):
