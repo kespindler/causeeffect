@@ -5,3 +5,7 @@ Competition/
 Models/
 Submissions/
 setup_env.sh
+*~
+ANNdiscrete_unused/
+figures/
+matlab/

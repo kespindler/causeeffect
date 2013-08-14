@@ -5,4 +5,3 @@ edges = linspace(min(X),max(X),nbins+1);
 [~, newX] = histc(X, edges);
 
 end
-

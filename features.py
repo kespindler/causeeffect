@@ -48,6 +48,7 @@ class FeatureMapper:
 def identity(x):
     #type of x is <type 'numpy.ndarray'>
     return x
+
 def measureAbsSum(list1):
     """takes a list of values of the y-values associated with one x value, returns their absolute distance
     from the mean --should account for number of samples?? """
@@ -84,17 +85,8 @@ def Hintegrand(f):
 
 # a, b is a dataset pair
 # ai, bi is dataset info ('Numerical', 'Binary', 'Categorical')
-def singleH(d, di):
-    if di == 'Numerical':
-        kernel = gaussian_kde(d)
-        hpos, err = quad(Hintegrand(kernel), -inf, inf)
-        print 'err for', d[:5], 'is', err
-    else:
-        freq = np.bincount(d.astype('int32')).astype('float64') / len(d)
-        hpos = np.dot(log(freq), freq)
-    return -hpos
-
 def conditional_info(a, ai, b, bi):
+    # You're just gonna bin shit.
     #aa, aii
     Ha = singleH(a, ai)
     Hb = singleH(b, bi)
