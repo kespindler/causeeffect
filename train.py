@@ -54,21 +54,21 @@ if __name__=="__main__":
     classifier = get_pipeline()
 
 ### FOLDS CODE
-    folds = cval.KFold(len(train), n_folds=2, indices=False)
-   
-    results = []
-    for i, fold in enumerate(folds):
-        print("Extracting features and training model for fold " + str(i))
-        traincv, testcv = fold
-        classifier.fit(train[traincv], target[traincv])
-        results.append(classifier.score(train[testcv], target[testcv]))
-
-    print(results)
-    print('Score: ' + str(np.array(results).mean()))
+#    folds = cval.KFold(len(train), n_folds=2, indices=False)
+#   
+#    results = []
+#    for i, fold in enumerate(folds):
+#        print("Extracting features and training model for fold " + str(i))
+#        traincv, testcv = fold
+#        classifier.fit(train[traincv], target[traincv])
+#        results.append(classifier.score(train[testcv], target[testcv]))
+#
+#    print(results)
+#    print('Score: ' + str(np.array(results).mean()))
 ###  REGULAR RUN
-#
-#    #classifier.fit(train, target.Target)
-#
-#    print("Saving the classifier")
-#    data_io.save_model(classifier)
-#  
+
+    classifier.fit(train, target.Target)
+
+    print("Saving the classifier")
+    data_io.save_model(classifier)
+  

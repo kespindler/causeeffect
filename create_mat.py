@@ -1,11 +1,6 @@
 import data_io
 import numpy as np
 from scipy.io import savemat, loadmat
-from sklearn.base import BaseEstimator
-from scipy.special import psi
-from scipy.stats.stats import pearsonr
-from scipy.integrate import quad, dblquad
-from scipy.stats import gaussian_kde
 
 DATA = 'train'
 
@@ -38,49 +33,50 @@ def jointH(a, b, atype, btype):
     hpos = np.sum(np.log(jointp) * jointp)
     return -hpos
 
-print 'Reading in data...'
+if __name__ == '__main__':
 
-if DATA == 'train':
-    info = data_io.read_train_info() 
-    train = data_io.read_train_pairs()
-elif DATA == 'test':
-    info = data_io.read_train_info() 
-    train = data_io.read_train_pairs()
-else:
-    raise ValueError
+    print 'Reading in data...'
 
-print 'Saving coded info matrix...'
-codes = np.zeros(info.values.shape)
-lookup = {'Numerical':1,
-        'Categorical':2,
-        'Binary':3}
-for i, t in enumerate(info.values):
-    a,b = t
-    codes[i,:] = [lookup[a], lookup[b]]
+    if DATA == 'train':
+        info = data_io.read_train_info() 
+        train = data_io.read_train_pairs()
+    elif DATA == 'valid':
+        info = data_io.read_valid_info() 
+        train = data_io.read_valid_pairs()
+    else:
+        raise ValueError
 
-savemat('matlab/{}info.mat'.format(DATA),
-        {'codes': codes})
-exit()
+    print 'Saving coded info matrix...'
+    codes = np.zeros(info.values.shape)
+    lookup = {'Numerical':1,
+            'Categorical':2,
+            'Binary':3}
+    for i, t in enumerate(info.values):
+        a,b = t
+        codes[i,:] = [lookup[a], lookup[b]]
 
-print 'Saving value matrices...'
-for i, t in enumerate(train.values):
-    A, B = t
-    savemat('matlab/{}{0:04}.mat'.format(DATA, i),
-            {'A': A, 'B': B})
+    savemat('matlab/{}info.mat'.format(DATA),
+            {'codes': codes}, oned_as='column')
 
-n_samples = len(info.values)
-conditional_entropy = np.zeros((n_samples, 2))
+    print 'Saving value matrices...'
+    for i, t in enumerate(train.values):
+        A, B = t
+        savemat('matlab/{0}{1:04}.mat'.format(DATA, i),
+                {'A': A, 'B': B})
 
-for i in range(n_samples):
-    print 'Processing entropy %d...' % (i, )
-    a, b = train.values[i]
-    atype, btype = info.values[i]
-    h_joint = jointH(a, b, atype, btype)
-    h_a = singleH(a, atype)
-    h_b = singleH(b, btype)
-    h_a_cond_b = h_joint - h_a
-    h_b_cond_a = h_joint - h_b
-    conditional_entropy[i,:] = [h_a_cond_b, h_b_cond_a]
+    n_samples = len(info.values)
+    conditional_entropy = np.zeros((n_samples, 2))
 
-savemat('matlab/{}entropy.mat'.format(DATA),
-        {'entropy': conditional_entropy}, oned_as='column')
+    for i in range(n_samples):
+        print 'Processing entropy %d...' % (i, )
+        a, b = train.values[i]
+        atype, btype = info.values[i]
+        h_joint = jointH(a, b, atype, btype)
+        h_a = singleH(a, atype)
+        h_b = singleH(b, btype)
+        h_a_cond_b = h_joint - h_a
+        h_b_cond_a = h_joint - h_b
+        conditional_entropy[i,:] = [h_a_cond_b, h_b_cond_a]
+
+    savemat('matlab/{}entropy.mat'.format(DATA),
+            {'entropy': conditional_entropy}, oned_as='column')

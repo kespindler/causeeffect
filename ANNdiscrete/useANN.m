@@ -1,9 +1,12 @@
-N = 4050;
+DATA = 'train'; 
+load(strcat('/Developer/CauseEffectPairs/matlab/', DATA, 'info.mat')); %brings codes into namespace
+
+N = length(codes);
+
 decisions = zeros(1,N);
-load('/Developer/CauseEffectPairs/matlab/info.mat'); %brings codes into namespace
 for i = 1:N % %[1:2 5:7]
     b = sprintf('%04d',i-1);
-    s = strcat('/Developer/CauseEffectPairs/matlab/', b, '.mat');
+    s = strcat('/Developer/CauseEffectPairs/matlab/', DATA, b, '.mat');
     data = load(s);
     cell = struct2cell(data);
     c = [cell{:}];
@@ -12,4 +15,4 @@ for i = 1:N % %[1:2 5:7]
     decisions(i) = decision;
     [i decision p_val1 p_val2]
 end
-save('/Developer/CauseEffectPairs/matlab/decisions.mat', 'decisions');
+save(strcat('/Developer/CauseEffectPairs/matlab/', DATA, 'decisions.mat'), 'decisions');

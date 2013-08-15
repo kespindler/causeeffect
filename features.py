@@ -7,13 +7,14 @@ from scipy.integrate import quad, dblquad
 from scipy.stats import gaussian_kde
 import collections
 from scipy.io import loadmat
+from create_mat import DATA
 
 inf = float('inf')
 finf = lambda x: inf
 nfinf = lambda x: -inf
 
-entropy = loadmat('matlab/entropy.mat')['entropy']
-decisions = loadmat('matlab/decisions.mat')['decisions'].flatten()
+entropy = loadmat('matlab/{}entropy.mat'.format(DATA))['entropy']
+decisions = loadmat('matlab/{}decisions.mat'.format(DATA))['decisions'].flatten()
 
 class FeatureMapper:
     def __init__(self, features):
@@ -92,14 +93,12 @@ def anm_decision(i):
 def normalized_entropy(x):
     x = (x - np.mean(x)) / np.std(x)
     x = np.sort(x)
-    
     hx = 0.0;
     for i in range(len(x)-1):
         delta = x[i+1] - x[i];
         if delta != 0:
             hx += np.log(np.abs(delta));
     hx = hx / (len(x) - 1) + psi(len(x)) - psi(1);
-
     return hx
 
 def entropy_difference(x, y):
@@ -110,9 +109,6 @@ def correlation(x, y):
 
 def correlation_magnitude(x, y):
     return abs(correlation(x, y))
-
-def mutual_info(x,y):
-    return 
 
 class SimpleTransform(BaseEstimator):
     def __init__(self, transformer=identity):
