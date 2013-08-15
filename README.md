@@ -21,3 +21,22 @@ To run the benchmark,
 5. [Make a submission](https://www.kaggle.com/c/cause-effect-pairs/team/select) with the output file
 
 This benchmark took less than 10 minutes to execute on a Windows 8 laptop with 8GB of RAM and 4 cores at 2.7GHz.
+
+
+
+Current Workflow
+================
+
+It's currently much more effort to do a run than it should be.
+
+1. Switch create_mat.py and useANN.m to 'train'.
+2. Run create_mat.py
+3. Run useANN
+4. Run py train.py
+
+5. Switch create_mat.py and useANN to 'valid'.
+6. Run create_mat.py
+7. Run useANN
+8. Run py predict.py
+
+

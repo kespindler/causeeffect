@@ -1,4 +1,4 @@
-DATA = 'train'; 
+DATA = 'valid'; 
 load(strcat('/Developer/CauseEffectPairs/matlab/', DATA, 'info.mat')); %brings codes into namespace
 
 N = length(codes);

@@ -2,7 +2,7 @@ import data_io
 import numpy as np
 from scipy.io import savemat, loadmat
 
-DATA = 'train'
+DATA = 'valid'
 
 def discretize(d):
     nbins = np.ceil(3.5*np.std(d) / len(d)**1.3);
@@ -35,7 +35,7 @@ def jointH(a, b, atype, btype):
 
 if __name__ == '__main__':
 
-    print 'Reading in data...'
+    print 'Reading in {} data...'.format(DATA)
 
     if DATA == 'train':
         info = data_io.read_train_info() 
